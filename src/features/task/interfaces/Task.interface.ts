@@ -16,3 +16,16 @@ export interface Meta {
   next: null;
   previous: null;
 }
+
+export interface CreateTaskResponse {
+  data: {
+    message: string;
+    id: number;
+  };
+}
+
+export interface GetTaskResponse {
+  data: {
+    task: Task;
+  };
+}
