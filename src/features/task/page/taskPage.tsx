@@ -1,7 +1,9 @@
+import TaskList from '@/features/task/components/todoListComponent.tsx';
+
 export const TaskPage = () => {
   return (
     <div>
-      <p>taks page</p>
+      <TaskList></TaskList>
     </div>
   );
 };
