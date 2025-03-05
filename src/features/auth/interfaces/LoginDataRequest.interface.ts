@@ -2,10 +2,11 @@ export interface LoginDataRequest {
   email: string;
 }
 
-export interface ILoginRespose {
-  data: ILogin;
+export interface LoginResponse {
+  data: Login;
+  token: string;
 }
 
-export interface ILogin {
+export interface Login {
   token: string;
 }
