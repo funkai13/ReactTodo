@@ -12,6 +12,7 @@ export const loginService = async (
   try {
     const response = await apiClient.post<LoginResponse>('login', credentials);
     useAuthStore.getState().setToken(response.data.data.token);
+    useAuthStore.getState().setEmail(credentials.email);
     const result = response.data.data;
     console.log(result);
 
