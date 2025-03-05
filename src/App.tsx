@@ -1,12 +1,8 @@
 import './App.css';
-import { Button } from '@/components/ui/button.tsx';
+import { LoginForm } from '@/features/auth/components/login-form.tsx';
 
 function App() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Click me</Button>
-    </div>
-  );
+  return <LoginForm></LoginForm>;
 }
 
 export default App;
