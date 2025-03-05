@@ -1,9 +1,9 @@
-export interface ITasksResponse {
+export interface TasksResponse {
   meta: Meta;
-  data: ITask[];
+  data: Task[];
 }
 
-export interface ITask {
+export interface Task {
   id: number;
   title: string;
   description: null | string;
