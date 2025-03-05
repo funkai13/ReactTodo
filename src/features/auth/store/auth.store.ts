@@ -1,13 +1,21 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthState } from '@/features/auth/interfaces/authState.interface.ts';
+import { AuthState } from '@/features/auth/interfaces/authState.interface';
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       token: null,
+      email: null,
+
       setToken: (token) => set({ token }),
-      logout: () => set({ token: null }),
+      setEmail: (email) => set({ email }),
+
+      logout: () =>
+        set({
+          token: null,
+          email: null,
+        }),
     }),
     {
       name: 'auth-storage',
