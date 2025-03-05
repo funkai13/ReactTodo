@@ -1,69 +1,83 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 import { useEditTaskStore } from '@/features/task/store/edit-tastk.store.ts';
-import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import { DialogFooter, DialogHeader } from '@/components/ui/dialog.tsx';
-import { Button } from '@/components/ui/button.tsx';
-
-// ... otros imports
-
-function Dialog(props: {
-  open: boolean;
-  onOpenChange: () => void;
-  children: ReactNode;
-}) {
-  return null;
-}
-
-function AlertDialogAction(props: {
-  onClick: () => Promise<void>;
-  className: string;
-  children: React.ReactNode;
-}) {
-  return null;
-}
-
-function AlertDialog(props: { children: React.ReactNode }) {
-  return null;
-}
+import DeleteConfirmation from '@/features/task/components/deleteConfirmation.tsx';
+import { useTaskStore } from '@/features/task/store/task.store.ts';
 
 export default function EditTaskModal() {
-  const { isOpen, selectedTask, closeModal, handleSave, handleDelete } =
-    useEditTaskStore();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
+  const { isOpen, selectedTask, closeModal } = useEditTaskStore();
+  const { updateTask, deleteTask } = useTaskStore();
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    is_completed: false,
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (selectedTask) {
-      setTitle(selectedTask.title);
-      setDescription(selectedTask.description || '');
-      setIsCompleted(selectedTask.is_completed);
+      setFormData({
+        title: selectedTask.title,
+        description: selectedTask.description || '',
+        is_completed: selectedTask.is_completed,
+      });
     }
   }, [selectedTask]);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleFormChange = (
+    field: keyof typeof formData,
+    value: string | boolean
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedTask || !title.trim()) return;
+    if (!selectedTask || !formData.title.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const updatedTask = {
-        ...selectedTask,
-        title,
-        description: description || null,
-        is_completed: isCompleted,
-      };
-
-      await handleSave(updatedTask);
+      await updateTask(selectedTask.id, formData);
+      toast.success('Tarea actualizada correctamente');
       closeModal();
     } catch (error) {
-      console.error('Error saving task:', error);
+      toast.error('Error al actualizar', {
+        description:
+          error instanceof Error ? error.message : 'Intenta nuevamente',
+      });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedTask) return;
+
+    try {
+      await deleteTask(selectedTask.id);
+      toast.success('Tarea eliminada');
+      closeModal();
+    } catch (error) {
+      toast.error('Error al eliminar', {
+        description:
+          error instanceof Error ? error.message : 'No se pudo eliminar',
+      });
     }
   };
 
@@ -73,25 +87,71 @@ export default function EditTaskModal() {
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editar Tarea</DialogTitle>
+          <DialogTitle className="text-lg font-semibold">
+            Editar Tarea #{selectedTask.id}
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          {/* ... mismos campos del formulario */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Título *</Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => handleFormChange('title', e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="focus:ring-primary"
+            />
+          </div>
 
-          <DialogFooter>
-            <AlertDialog>
-              {/* Botón de eliminar que usa handleDelete del store */}
-              <AlertDialogAction
-                onClick={() => handleDelete(selectedTask.id)}
-                className="bg-destructive"
-              >
-                Eliminar
-              </AlertDialogAction>
-            </AlertDialog>
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleFormChange('description', e.target.value)}
+              rows={3}
+              disabled={isSubmitting}
+              className="resize-none focus:ring-primary"
+            />
+          </div>
 
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Guardando...' : 'Guardar'}
+          <div className="flex items-center gap-2">
+            <Switch
+              id="completed"
+              checked={formData.is_completed}
+              onCheckedChange={(checked) =>
+                handleFormChange('is_completed', checked)
+              }
+              disabled={isSubmitting}
+            />
+            <Label htmlFor="completed" className="text-sm font-medium">
+              Estado: {formData.is_completed ? 'Completada' : 'Pendiente'}
+            </Label>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <DeleteConfirmation
+              onConfirm={handleDelete}
+              isDeleting={isSubmitting}
+            />
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={closeModal}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </Button>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting || !formData.title.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
             </Button>
           </DialogFooter>
         </form>
