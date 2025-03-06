@@ -14,7 +14,6 @@ export const loginService = async (
     useAuthStore.getState().setToken(response.data.data.token);
     useAuthStore.getState().setEmail(credentials.email);
     const result = response.data.data;
-    console.log(result);
 
     return result;
   } catch (error) {

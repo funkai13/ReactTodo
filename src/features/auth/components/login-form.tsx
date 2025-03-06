@@ -63,7 +63,11 @@ export const LoginForm = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            disabled={loading}
+          >
             {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </Button>
         </CardFooter>
