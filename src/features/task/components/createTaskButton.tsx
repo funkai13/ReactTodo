@@ -41,7 +41,6 @@ export default function CreateTaskButton() {
         title: title.trim(),
         description: description.trim() || null,
       });
-      console.log('newTask compoennte modal', newTask);
       addTask(newTask);
 
       toast.success('Tarea creada', {
@@ -62,7 +61,7 @@ export default function CreateTaskButton() {
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
+      <Button className="cursor-pointer" onClick={() => setIsOpen(true)}>
         <Plus className="mr-2 h-4 w-4" />
         Nueva Tarea
       </Button>
@@ -98,13 +97,18 @@ export default function CreateTaskButton() {
 
             <DialogFooter>
               <Button
+                className="cursor-pointer"
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                className="cursor-pointer"
+                type="submit"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? 'Creando...' : 'Crear Tarea'}
               </Button>
             </DialogFooter>

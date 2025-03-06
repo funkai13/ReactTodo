@@ -121,6 +121,7 @@ export default function TaskList() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
               <Checkbox
+                className="cursor-pointer"
                 checked={task.is_completed}
                 onCheckedChange={(checked) =>
                   handleStatusChange(task.id, checked === true)
@@ -149,6 +150,7 @@ export default function TaskList() {
             </p>
             <div className="flex gap-2">
               <Button
+                className="cursor-pointer"
                 variant="ghost"
                 size="icon"
                 onClick={() => handleEdit(task)}

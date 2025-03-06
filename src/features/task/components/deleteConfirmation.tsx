@@ -21,7 +21,7 @@ export default function DeleteConfirmation({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button type="button" variant="destructive">
+        <Button type="button" variant="destructive" className="cursor-pointer">
           Eliminar
         </Button>
       </AlertDialogTrigger>

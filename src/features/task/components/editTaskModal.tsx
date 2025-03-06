@@ -29,7 +29,7 @@ export default function EditTaskModal() {
     is_completed: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isModified, setIsModified] = useState(false);
   useEffect(() => {
     if (selectedTask) {
       setFormData({
@@ -37,6 +37,7 @@ export default function EditTaskModal() {
         description: selectedTask.description || '',
         is_completed: selectedTask.is_completed,
       });
+      setIsModified(false);
     }
   }, [selectedTask]);
 
@@ -44,9 +45,16 @@ export default function EditTaskModal() {
     field: keyof typeof formData,
     value: string | boolean
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const updatedForm = { ...prev, [field]: value };
+      setIsModified(
+        updatedForm.title !== selectedTask?.title ||
+          updatedForm.description !== selectedTask?.description ||
+          updatedForm.is_completed !== selectedTask?.is_completed
+      );
+      return updatedForm;
+    });
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTask || !formData.title.trim()) return;
@@ -119,6 +127,7 @@ export default function EditTaskModal() {
 
           <div className="flex items-center gap-2">
             <Switch
+              className="cursor-pointer"
               id="completed"
               checked={formData.is_completed}
               onCheckedChange={(checked) =>
@@ -131,28 +140,34 @@ export default function EditTaskModal() {
             </Label>
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
-            <DeleteConfirmation
-              onConfirm={handleDelete}
-              isDeleting={isSubmitting}
-            />
-
+          <DialogFooter className="flex justify-between mt-4">
+            {/* Botón de cancelar a la izquierda */}
             <Button
               type="button"
               variant="outline"
               onClick={closeModal}
               disabled={isSubmitting}
+              className="cursor-pointer"
             >
               Cancelar
             </Button>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting || !formData.title.trim()}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
-            </Button>
+            <div className="flex gap-2">
+              {/* Botón de eliminar */}
+              <DeleteConfirmation
+                onConfirm={handleDelete}
+                isDeleting={isSubmitting}
+              />
+
+              {/* Botón de guardar cambios */}
+              <Button
+                type="submit"
+                disabled={isSubmitting || !isModified}
+                className="bg-primary hover:bg-primary/90 cursor-pointer"
+              >
+                {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
