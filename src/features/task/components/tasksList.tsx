@@ -140,7 +140,7 @@ export default function TaskList() {
             )}
           </CardHeader>
           <CardContent>
-            <CardDescription className="text-left">
+            <CardDescription className="text-left break-words max-h-20 overflow-y-auto">
               {task.description}
             </CardDescription>
           </CardContent>
