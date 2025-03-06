@@ -1,54 +1,79 @@
-# React + TypeScript + Vite
+# Aplicación de Gestión de Tareas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una moderna aplicación web para gestión de tareas construida con React, con arquitectura limpia y separación de responsabilidades. Diseñada para escalabilidad y mantenibilidad.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 📝 Operaciones CRUD para tareas
+- ✅ Marcar tareas como completadas/pendientes
+- 📅 Seguimiento automático de fecha de creación
+- 🔄 Gestión de estado en tiempo real
+- 📱 Interfaz responsive
+- 🧩 Arquitectura basada en componentes
+- 🔗 Enrutamiento del lado del cliente
+- 🛠 Soporte para TypeScript
 
-## Expanding the ESLint configuration
+## Tecnologías
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Núcleo**: 
+  - React 19
+  - TypeScript
+  - Vite
+- **Gestión de estado**: 
+  - Zustand
+- **Enrutamiento**: 
+  - React Router Dom
+- **UI**: 
+  - Shadcn UI
+  - Tailwind CSS
+  - Iconos Lucide React
+- **Utilidades**: 
+  - Axios (Cliente HTTP)
+  - date-fns (Formato de fechas)
+  - Sonner (Notificaciones)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Decisiones Arquitectónicas Clave
+
+1. **Arquitectura Basada en Características**
+   - Separación lógica por características/módulos
+   - Módulos autocontenidos con:
+     - Componentes
+     - Gestión de estado
+     - Servicios API
+     - Definiciones de tipos
+
+2. **Gestión de Estado**
+   - Stores de Zustand para estado global
+   - Stores ubicados junto a sus características
+   - Acciones separadas de componentes UI
+
+3. **Componentes UI**
+   - Componentes Shadcn UI con estilos personalizados
+   - Componentes Presentacionales vs Contenedores
+   - Patrón de composición de componentes
+
+4. **Capa de API**
+   - Instancia de Axios con configuración base
+   - Clases de servicio por característica
+   - Seguridad de tipos en Request/Response
+
+5. **Calidad de Código**
+   - TypeScript en modo estricto
+   - ESLint + Prettier
+   - Nomenclatura semántica de componentes
+   - Estructura de archivos/carpetas consistente
+
+## Instalación
+
+1. Clonar repositorio:
+```bash
+git clone https://github.com/tu-usuario/task-management-app.git
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+2. Instalar Dependencias:
+```bash 
+npm install
+```
+3. Iniciar servidor de desarrollo:
+```bash
+npm run dev
 ```
