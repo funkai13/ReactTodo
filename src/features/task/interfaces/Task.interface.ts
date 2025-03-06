@@ -1,9 +1,9 @@
-export interface ITasksResponse {
+export interface TasksResponse {
   meta: Meta;
-  data: ITask[];
+  data: Task[];
 }
 
-export interface ITask {
+export interface Task {
   id: number;
   title: string;
   description: null | string;
@@ -15,4 +15,17 @@ export interface Meta {
   pages: number;
   next: null;
   previous: null;
+}
+
+export interface CreateTaskResponse {
+  data: {
+    message: string;
+    id: number;
+  };
+}
+
+export interface GetTaskResponse {
+  data: {
+    task: Task;
+  };
 }
